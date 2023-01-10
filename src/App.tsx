@@ -52,14 +52,19 @@ function App() {
     .catch( err => console.error(err) )
   }, [])
 
-  const onFilterSelect = (e: number) => {
-    if(filteredId.indexOf(e) === -1){
-      filteredId.push(Number(e))
+  const onFilterSelect = (e: string) => {
+    const selectedId = Number(e);
+    let updatedFilteredIds: number[] = [...filteredId];
+    if(!filteredId.includes(selectedId)){
+      updatedFilteredIds.push(selectedId)
+    } else {
+      updatedFilteredIds = updatedFilteredIds.filter(id => id !== selectedId)
     }
-    setFilteredId(filteredId)
+
+    setFilteredId(updatedFilteredIds)
     
-    let filteredList: ListItemType[] = list.filter((item: ListItemType) => item.userId === Number(e))
-    setDisplayList((current) => [...current, ...filteredList])
+    let filteredList: ListItemType[] = list.filter((item: ListItemType) => updatedFilteredIds.includes(item.userId))
+    setDisplayList(filteredList)
   }
   
   return (
@@ -74,6 +79,7 @@ function App() {
             style={{width: '100%'}}
             options={uniqueIds}
             onSelect={onFilterSelect}
+            onDeselect={onFilterSelect}
           />
           {displayList.map((item: ListItemType, key: number) => <ListItem listItem={item} key={key}/> )}
         </>
