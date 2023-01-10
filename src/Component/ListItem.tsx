@@ -1,6 +1,7 @@
 import React from 'react'
 import { ListItemType } from '../Type/List.type'
 import { Card } from 'antd';
+import '../App.css'
 
 interface Props {
   listItem: ListItemType
@@ -8,11 +9,11 @@ interface Props {
 
 const ListItem:React.FC<Props> = ({ listItem }) => {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20  }}>
+    <div className='list'>
       <Card bordered={false} style={{ width: 300 }}>
-        <p>User Id: {listItem.userId}</p>
-        <p>Title: {listItem.title}</p>
-        <p>Body: {listItem.body}</p>
+        <p><span className='headings'> User Id: </span> {listItem.userId}</p>
+        <p><span className='headings'> Title: </span> {listItem.title}</p>
+        <p><span className='headings'> Body: </span> {listItem.body}</p>
       </Card>
     </div>
   )
