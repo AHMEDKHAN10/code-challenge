@@ -37,7 +37,6 @@ function App() {
     .then( res => {
       const posts = res.data
       setList(posts) 
-      setDisplayList(posts)
       const uniquePostUserIds = posts.map((item: ListItemType) => item.userId )
       .filter((value: number, index: number, self: any) => self.indexOf(value) === index)
 
@@ -51,19 +50,23 @@ function App() {
   }, [])
 
   const onFilterSelect = (e: number) => {
-    if(filteredId.indexOf(e) === -1){
-      filteredId.push(Number(e))
-    }
-    setFilteredId(filteredId)
+
+    // if(filteredId.indexOf(e) === -1){
+    //   filteredId.push(Number(e))
+    // }
+    // setFilteredId(filteredId)
     
     let filteredList: ListItemType[] = list.filter((item: ListItemType) => item.userId === Number(e))
+    console.log(filteredList)
     setDisplayList((current) => [...current, ...filteredList])
+
   }
+  console.log(displayList)
   
   return (
     <div className="App">
       {
-        displayList.length > 0
+        displayList.length > 0 || list.length > 0
           ? <>
               <Select
                 mode="multiple"
@@ -74,7 +77,10 @@ function App() {
                 options={uniqueIds}
                 onSelect={onFilterSelect}
               />
-              {displayList.map((item: ListItemType, key: number) => <ListItem listItem={item} key={key}/> )}
+              { displayList.length > 0 
+                ? displayList.map((item: ListItemType, key: number) => <ListItem listItem={item} key={key}/> )
+                : list.map((item: ListItemType, key: number) => <ListItem listItem={item} key={key}/> )
+              }
             </>
           : <>Loading</>
       }
