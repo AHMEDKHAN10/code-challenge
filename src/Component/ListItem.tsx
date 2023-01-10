@@ -1,19 +1,14 @@
 import React from 'react'
-import { ListType } from '../Type/List.type'
-import { Card, Space } from 'antd';
+import { ListItemType } from '../Type/List.type'
+import { Card } from 'antd';
 
 interface Props {
-  listItem: ListType
+  listItem: ListItemType
 }
 
-const ListItem:React.FC<Props> = ({listItem}) => {
+const ListItem:React.FC<Props> = ({ listItem }) => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20  }}>
-      {/* List
-      <p>body: {list.body}</p>
-      <p>id: {list.id}</p>
-      <p>tile: {list.title}</p>
-      <p>userId: {list.userId}</p> */}
       <Card bordered={false} style={{ width: 300 }}>
         <p>User Id: {listItem.userId}</p>
         <p>Title: {listItem.title}</p>

@@ -1,18 +1,17 @@
-import React from 'react';
-import {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 import ListItem from './Component/ListItem';
+import { ListItemType } from "./Type/List.type";
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import { Select, Tag } from 'antd';
 
 const tagRender = (props: CustomTagProps) => {
-  const { label, value, closable, onClose } = props;
+  const { label, closable, onClose } = props;
   const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
     event.preventDefault();
     event.stopPropagation();
   };
-
   
   return (
     <Tag
@@ -28,25 +27,18 @@ const tagRender = (props: CustomTagProps) => {
 };
 
 function App() {
-  const [list, setlist] = useState(Array<List>)
-  const [displayList, setDisplayList] = useState(Array<List>)
-  const [filteredId, setFilteredId] = useState(Array)
-  const [uniqueIds, setUniqueId] = useState(Array<{value: string}>)
-
-  interface List {
-    body: string;
-    id: number;
-    title: string;
-    userId: number;
-  }
+  const [list, setList] = useState<ListItemType[]>([])
+  const [displayList, setDisplayList] = useState<ListItemType[]>([])
+  const [filteredId, setFilteredId] = useState<number[]>([])
+  const [uniqueIds, setUniqueId] = useState<{ value: string }[]>([])
 
   useEffect(() => {
     axios.get(`https://jsonplaceholder.typicode.com/posts`)
     .then( res => {
       const posts = res.data
-      setlist(posts) 
+      setList(posts) 
       setDisplayList(posts)
-      const uniquePostUserIds = posts.map((item: List) => item.userId )
+      const uniquePostUserIds = posts.map((item: ListItemType) => item.userId )
       .filter((value: number, index: number, self: any) => self.indexOf(value) === index)
 
       const arr: { value: string; }[] = []
@@ -59,16 +51,13 @@ function App() {
   }, [])
 
   const onFilterSelect = (e: number) => {
-    
     if(filteredId.indexOf(e) === -1){
       filteredId.push(Number(e))
     }
     setFilteredId(filteredId)
     
-    let filteredList: Array<List> = list.filter((item: List) => item.userId === Number(e))
-    console.log(filteredList)
-    displayList.push(filteredList)
-    setDisplayList(displayList)
+    let filteredList: ListItemType[] = list.filter((item: ListItemType) => item.userId === Number(e))
+    setDisplayList((current) => [...current, ...filteredList])
   }
   
   return (
@@ -85,9 +74,9 @@ function App() {
                 options={uniqueIds}
                 onSelect={onFilterSelect}
               />
-              {displayList.map((item: List, key: number) => <ListItem listItem={item} key={key}/> )}
+              {displayList.map((item: ListItemType, key: number) => <ListItem listItem={item} key={key}/> )}
             </>
-          : <>loadinf</>
+          : <>Loading</>
       }
     </div>
   );
