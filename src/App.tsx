@@ -27,6 +27,7 @@ const tagRender = (props: CustomTagProps) => {
 };
 
 function App() {
+  const [loading, setLoading] = useState(true);
   const [list, setList] = useState<ListItemType[]>([])
   const [displayList, setDisplayList] = useState<ListItemType[]>([])
   const [filteredId, setFilteredId] = useState<number[]>([])
@@ -46,6 +47,7 @@ function App() {
         arr.push({ 'value': JSON.stringify(item) })
       })
       setUniqueId(arr)
+      setLoading(false)
     })
     .catch( err => console.error(err) )
   }, [])
@@ -62,21 +64,19 @@ function App() {
   
   return (
     <div className="App">
-      {
-        displayList.length > 0
-          ? <>
-              <Select
-                mode="multiple"
-                showArrow
-                tagRender={tagRender}
-                defaultValue={[]}
-                style={{ width: '100%' }}
-                options={uniqueIds}
-                onSelect={onFilterSelect}
-              />
-              {displayList.map((item: ListItemType, key: number) => <ListItem listItem={item} key={key}/> )}
-            </>
-          : <>Loading</>
+      {loading ? <>Loading</> :
+        <>
+          <Select
+            mode="multiple"
+            showArrow
+            tagRender={tagRender}
+            defaultValue={[]}
+            style={{width: '100%'}}
+            options={uniqueIds}
+            onSelect={onFilterSelect}
+          />
+          {displayList.map((item: ListItemType, key: number) => <ListItem listItem={item} key={key}/> )}
+        </>
       }
     </div>
   );
